@@ -1,5 +1,6 @@
 /////////-----------------------------View---------------------/////////
 var places = document.getElementsByClassName('place');
+console.dir(places);
 /////////-----------------------------View---------------------/////////
 
 
@@ -18,14 +19,14 @@ var pieceHandler = (elem) => {
 var resetHandler = () => {
   console.log('resetHandler');
   boardReset();
-}
+};
 
 var checkBoard = () => { //Uses checkRow to check if there is a winner after each turn
   var board = [[], [], []];
   for (elem of places) {
     board[elem.id[0] - 1].push(elem.innerHTML);
-    console.dir(elem)
   }
+
   checkRow(board[0], board[1], board[2]); //checks vertical rows (columns)
   var rowOne = [board[0][0], board[1][0], board[2][0]];
   var rowTwo = [board[0][1], board[1][1], board[2][1]];
@@ -33,6 +34,7 @@ var checkBoard = () => { //Uses checkRow to check if there is a winner after eac
   checkRow(rowOne, rowTwo, rowThree); //checks horizontal rows (rows)
   var diagOne = [board[0][0], board[1][1], board[2][2]];
   var diagTwo = [board[2][0], board[1][1], board[0][2]];
+  // debugger;
   checkRow(diagOne, diagTwo); //checks diagonal rows (diagonals)
 };
 
@@ -46,14 +48,16 @@ var checkRow = (...rows) => { //checks each row, column, or diagonal.
     })
     if (rowXcount === 3) {
       announceWinner('X');
+      break;
     } else if (rowOcount === 3) {
       announceWinner('O');
+      break;
     } else if (totalCount === 9) {
       announceDraw();
+      break;
     } else { //reset for next row
       rowXcount = rowOcount = 0;
     }
-    break;
   }
 };
 
@@ -66,15 +70,17 @@ var announceWinner = (xOrO) => { //self explanatory
   for (let elem of document.getElementsByClassName(notXorO)) {
     elem.style.color = 'red';
   }
-  document.getElementById('board').append(`${xOrO} is the winner!`)
+  var winNode = document.createElement('p');
+  winNode.innerHTML = `${xOrO} is the winner!`;
+  winNode.id = 'win';
+  document.getElementById('board').append(winNode);
 };
 
 var announceDraw = () => {
-  // debugger;
   for (let elem of document.getElementsByClassName('place')) {
     elem.style.color = 'indigo';
   }
-}
+};
 
 var boardReset = () => {
   console.log('boardReset')
@@ -83,20 +89,21 @@ var boardReset = () => {
     elem.className = 'place';
     elem.style.color = 'black';
     playerOnesTurn = true;
-    console.log(elem)
   }
-}
+  var winNode = document.getElementById('win');
+  if (winNode) {
+    document.getElementById('board').removeChild(winNode);
+  }
+};
 /////////-----------------------------Controller---------------------/////////
 
 /////////-----------------------------Model---------------------/////////
-var createNewBoard = () => {
+var attachHandlers = (() => {
   for (let elem of places) {
     elem.onclick = pieceHandler;
   }
   document.getElementById('reset-button').onclick = resetHandler;
-};
+})();
 
 var playerOnesTurn = true;
-
-createNewBoard();
 /////////-----------------------------Model---------------------/////////
