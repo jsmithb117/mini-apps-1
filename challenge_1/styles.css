@@ -1,4 +1,4 @@
-.board {
+#board {
   display: grid;
   grid-template-columns: 25% 25% 25%;
   grid-template-rows: 100px 100px 100px;

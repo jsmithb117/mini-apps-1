@@ -5,7 +5,7 @@ var places = document.getElementsByClassName('place');
 
 
 /////////-----------------------------Controller---------------------/////////
-var clickHandler = (elem) => {
+var pieceHandler = (elem) => {
   var id = elem.srcElement.attributes.id.nodeValue;
   var xOrO = playerOnesTurn ? 'X' : 'O';
   var node = document.getElementById(id);
@@ -15,25 +15,30 @@ var clickHandler = (elem) => {
   checkBoard();
 };
 
-var checkBoard = () => { //Uses checkCRD to check if there is a winner after each turn
+var resetHandler = () => {
+  console.log('resetHandler');
+  boardReset();
+}
+
+var checkBoard = () => { //Uses checkRow to check if there is a winner after each turn
   var board = [[], [], []];
   for (elem of places) {
     board[elem.id[0] - 1].push(elem.innerHTML);
+    console.dir(elem)
   }
-  checkCRD(board[0], board[1], board[2]); //checks columns
+  checkRow(board[0], board[1], board[2]); //checks vertical rows (columns)
   var rowOne = [board[0][0], board[1][0], board[2][0]];
   var rowTwo = [board[0][1], board[1][1], board[2][1]];
   var rowThree = [board[0][2], board[1][2], board[2][2]];
-  checkCRD(rowOne, rowTwo, rowThree); //checks rows
+  checkRow(rowOne, rowTwo, rowThree); //checks horizontal rows (rows)
   var diagOne = [board[0][0], board[1][1], board[2][2]];
   var diagTwo = [board[2][0], board[1][1], board[0][2]];
-  checkCRD(diagOne, diagTwo); //checks diagonals
+  checkRow(diagOne, diagTwo); //checks diagonal rows (diagonals)
 };
 
-var checkCRD = (...rows) => { //checks each row/column, or diagonal depending on how many elements are passed in.
+var checkRow = (...rows) => { //checks each row, column, or diagonal.
   var rowXcount = rowOcount = totalCount = 0;
   for(let row of rows) {
-    // debugger;
     row.map((elem) => {
       rowXcount = (elem === 'X') ? rowXcount + 1 : rowXcount;
       rowOcount = (elem === 'O') ? rowOcount + 1 : rowOcount;
@@ -44,11 +49,11 @@ var checkCRD = (...rows) => { //checks each row/column, or diagonal depending on
     } else if (rowOcount === 3) {
       announceWinner('O');
     } else if (totalCount === 9) {
-      // debugger;
       announceDraw();
     } else { //reset for next row
       rowXcount = rowOcount = 0;
     }
+    break;
   }
 };
 
@@ -61,6 +66,7 @@ var announceWinner = (xOrO) => { //self explanatory
   for (let elem of document.getElementsByClassName(notXorO)) {
     elem.style.color = 'red';
   }
+  document.getElementById('board').append(`${xOrO} is the winner!`)
 };
 
 var announceDraw = () => {
@@ -71,18 +77,23 @@ var announceDraw = () => {
 }
 
 var boardReset = () => {
-  for (let elem in places) {
+  console.log('boardReset')
+  for (let elem of places) {
     elem.innerHTML = '';
     elem.className = 'place';
+    elem.style.color = 'black';
+    playerOnesTurn = true;
+    console.log(elem)
   }
 }
 /////////-----------------------------Controller---------------------/////////
 
 /////////-----------------------------Model---------------------/////////
-var createNewBoard = () => { //only assigns clickHandlers for now
+var createNewBoard = () => {
   for (let elem of places) {
-    elem.onclick = clickHandler;
+    elem.onclick = pieceHandler;
   }
+  document.getElementById('reset-button').onclick = resetHandler;
 };
 
 var playerOnesTurn = true;
