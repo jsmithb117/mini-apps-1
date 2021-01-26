@@ -2,94 +2,67 @@ var places = document.getElementsByClassName('place');
 
 var playerOnesTurn = true;
 
-var checkColsRows = (...rows) => {
-  // debugger;
-  var rowXcount = 0;
-  var rowOcount = 0;
+var checkCRD = (...rows) => { //checks each row/column, or diagonal depending on how many elements are passed in.
+  var rowXcount = rowOcount = 0;
   for(let row of rows) {
     row.map((elem) => {
-      if (elem === 'X') {
-        rowXcount++;
-      } else if (elem === 'O') {
-        rowOcount++;
-      }
+      rowXcount = (elem === 'X') ? rowXcount + 1 : rowXcount;
+      rowOcount = (elem === 'O') ? rowOcount + 1 : rowOcount;
     })
     if (rowXcount === 3) {
       announceWinner('X');
     } else if (rowOcount === 3) {
       announceWinner('O');
-    } else {
-      rowXcount = 0;
-      rowOcount = 0;
+    } else { //reset for next row
+      rowXcount = rowOcount = 0;
     }
   }
 };
 
-// var checkRows = (col1, col2, col3) => {
 
-// };
-
-var checkDiags = (board) => {
-
-};
-
-var announceWinner = (xOrO) => {
-  var xOrO, notXorO;
-  if (xOrO === 'X') {
-    xOrO = 'X';
-    notXorO = 'O'
-  } else if (xOrO === 'O') {
-    xOrO = 'O';
-    notXorO = 'X';
-  }
-  debugger;
-  var greens = document.getElementsByClassName(xOrO);
-  var reds = document.getElementsByClassName(notXorO);
-  for (let elem of greens) {
+var announceWinner = (xOrO) => { //self explanatory
+  var notXorO = xOrO === 'X' ? 'O' : 'X';
+  for (let elem of document.getElementsByClassName(xOrO)) {
     elem.style.color = 'green';
   };
-  for (let elem of reds) {
+  for (let elem of document.getElementsByClassName(notXorO)) {
     elem.style.color = 'red';
   }
 };
 
 
 
-var checkBoard = () => {
-  // debugger;
+var checkBoard = () => { //Uses checkCRD to check if there is a winner after each turn
   var board = [[], [], []];
   for (elem of places) {
     board[elem.id[0] - 1].push(elem.innerHTML);
   }
-  checkColsRows(board[0], board[1], board[2]);
+  checkCRD(board[0], board[1], board[2]); //checks columns
   var rowOne = [board[0][0], board[1][0], board[2][0]];
   var rowTwo = [board[0][1], board[1][1], board[2][1]];
   var rowThree = [board[0][2], board[1][2], board[2][2]];
-  checkColsRows(rowOne, rowTwo, rowThree);
+  checkCRD(rowOne, rowTwo, rowThree); //checks rows
+  var diagOne = [board[0][0], board[1][1], board[2][2]];
+  var diagTwo = [board[2][0], board[1][1], board[0][2]];
+  checkCRD(diagOne, diagTwo); //checks diagonals
 
 };
 
 
 var clickHandler = (elem) => {
-  // debugger;
   var id = elem.srcElement.attributes.id.nodeValue;
-  var xOrO;
-  if (playerOnesTurn) {
-    xOrO = 'X';
-  } else {
-    xOrO = 'O';
-  }
-  var element = document.getElementById(id)
-  element.innerHTML = xOrO;
-  element.className += ` ${xOrO}`;
+  var xOrO = playerOnesTurn ? 'X' : 'O';
+  var node = document.getElementById(id);
+  node.innerHTML = xOrO; //assigns value to board piece
+  node.className += ` ${xOrO}`; //attaches the value as an additional class, used for 'announceWinner'
   playerOnesTurn = !playerOnesTurn;
   checkBoard();
 }
 
-for (let elem of places) {
-  // debugger;
-  console.log(elem.attributes);
-  console.log(elem.attributes.id.nodeValue);
-  // elem.addEventListener('click', clickHandler());
-  elem.onclick = clickHandler;
-}
+var createNewBoard = () => { //only assigns clickHandlers for now
+  for (let elem of places) {
+    elem.onclick = clickHandler;
+  }
+};
+
+createNewBoard();
