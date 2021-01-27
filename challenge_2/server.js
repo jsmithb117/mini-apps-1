@@ -16,7 +16,10 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use('/', (req, res, next) => {
-  CSV(req, res, next);
+  console.log(req.body)
+  var data = CSV(req.body);
+  console.log(data);
+  res.send(data);
   next();
 });
 
