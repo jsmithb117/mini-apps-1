@@ -1,7 +1,12 @@
 module.exports = (jsonData) => {
+  // console.log('jsonData from parseBody')
+  // console.log(jsonData);
+  var parsedData = JSON.parse(jsonData);
+  // console.log ('Parsed data?')
+  // console.log(parsedData);
   var csv = '';
   var csvConcat = (...args) => csv = csv.concat(...args);
-  for (let elem in jsonData) { //parse field names
+  for (let elem in parsedData) { //parse field names
     if (elem !== 'sales' && elem !== 'children') {
       csvConcat(elem, ',');
     }
@@ -21,6 +26,6 @@ module.exports = (jsonData) => {
     for(let elem of array) {
       parseObject(elem);
   }};
-  parseObject(jsonData);
+  parseObject(parsedData);
   return csv
 };
