@@ -1,9 +1,5 @@
 module.exports = (jsonData) => {
-  // console.log('jsonData from parseBody')
-  // console.log(jsonData);
   var parsedData = JSON.parse(jsonData);
-  // console.log ('Parsed data?')
-  // console.log(parsedData);
   var csv = '';
   var csvConcat = (...args) => csv = csv.concat(...args);
   for (let elem in parsedData) { //parse field names
