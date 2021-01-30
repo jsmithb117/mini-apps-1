@@ -56,4 +56,4 @@ app.get('/:file', (req, res, next) => {
   //must serve ../client/index.html
   //must flatten JSON data
   //keys of JSON will be columns for CSV report
-//E - ?
+//E - Children have more or less properties than their parent.
