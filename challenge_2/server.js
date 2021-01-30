@@ -19,15 +19,7 @@ app.use(bodyParser.urlencoded({
 
 app.post('/', (req, res, next) => {
   var body = JSON.stringify(req.body);
-  console.log('body');
-  console.log(body);
-  // var newBuffer = Buffer.from(body, 'utf-8');
-  // var bufferString = newBuffer.toString();
-  // var stringBuffer = JSON.stringify(bufferString);
-  // var parsedBinaryWithHeader = JSON.parse(stringBuffer);
   parsedWithoutHeader = body.replace('data:application/json;base64,', '');
-  console.log('parsedWithoutHeader');
-  console.log(parsedWithoutHeader);
   parsedAscii = atob(parsedWithoutHeader);
   var data = CSV(parsedAscii);
   res.writeHead(200, { 'Content-Type': 'text/csv' });
@@ -60,4 +52,4 @@ app.get('/:file', (req, res, next) => {
   //must serve ../client/index.html
   //must flatten JSON data
   //keys of JSON will be columns for CSV report
-//E - Children have more or less properties than their parent.
+//E - Children may have more or fewer properties than their parent.  All sibling elements will contain the same properties.
