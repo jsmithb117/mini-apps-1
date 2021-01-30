@@ -73,6 +73,14 @@ var announceDraw = () => {
   for (let elem of document.getElementsByClassName('place')) {
     elem.style.color = 'indigo';
   }
+  var oldNode = document.getElementById('tie');
+  if(oldNode) {
+    oldNode.removeChild();
+  }
+  var drawNode = document.createElement('p');
+  drawNode.innerHTML = `Tie!`;
+  drawNode.id = 'tie';
+  document.getElementById('board').append(drawNode);
 };
 
 var boardReset = () => {
@@ -83,8 +91,12 @@ var boardReset = () => {
     playerOnesTurn = true;
   }
   var winNode = document.getElementById('win');
+  var tieNode = document.getElementById('tie');
   if (winNode) {
     document.getElementById('board').removeChild(winNode);
+  }
+  if (tieNode) {
+    tieNode.remove();
   }
 };
 /////////-----------------------------Controller---------------------/////////
