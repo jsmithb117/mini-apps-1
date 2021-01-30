@@ -1,10 +1,6 @@
 /////////-----------------------------View---------------------/////////
 var places = document.getElementsByClassName('place');
-console.dir(places);
 /////////-----------------------------View---------------------/////////
-
-
-
 /////////-----------------------------Controller---------------------/////////
 var pieceHandler = (elem) => {
   var id = elem.srcElement.attributes.id.nodeValue;
@@ -17,7 +13,6 @@ var pieceHandler = (elem) => {
 };
 
 var resetHandler = () => {
-  console.log('resetHandler');
   boardReset();
 };
 
@@ -26,19 +21,17 @@ var checkBoard = () => { //Uses checkRow to check if there is a winner after eac
   for (elem of places) {
     board[elem.id[0] - 1].push(elem.innerHTML);
   }
-
-  checkRow(board[0], board[1], board[2]); //checks vertical rows (columns)
   var rowOne = [board[0][0], board[1][0], board[2][0]];
   var rowTwo = [board[0][1], board[1][1], board[2][1]];
   var rowThree = [board[0][2], board[1][2], board[2][2]];
-  checkRow(rowOne, rowTwo, rowThree); //checks horizontal rows (rows)
   var diagOne = [board[0][0], board[1][1], board[2][2]];
   var diagTwo = [board[2][0], board[1][1], board[0][2]];
-  // debugger;
+  checkRow(rowOne, rowTwo, rowThree); //checks horizontal rows (rows)
+  checkRow(board[0], board[1], board[2]); //checks vertical rows (columns)
   checkRow(diagOne, diagTwo); //checks diagonal rows (diagonals)
 };
 
-var checkRow = (...rows) => { //checks each row, column, or diagonal.
+var checkRow = (...rows) => {
   var rowXcount = rowOcount = totalCount = 0;
   for(let row of rows) {
     row.map((elem) => {
@@ -61,7 +54,7 @@ var checkRow = (...rows) => { //checks each row, column, or diagonal.
   }
 };
 
-var announceWinner = (xOrO) => { //self explanatory
+var announceWinner = (xOrO) => {
   var notXorO = xOrO === 'X' ? 'O' : 'X';
   for (let elem of document.getElementsByClassName(xOrO)) {
     elem.style.color = 'green';
@@ -83,7 +76,6 @@ var announceDraw = () => {
 };
 
 var boardReset = () => {
-  console.log('boardReset')
   for (let elem of places) {
     elem.innerHTML = '';
     elem.className = 'place';
@@ -96,7 +88,6 @@ var boardReset = () => {
   }
 };
 /////////-----------------------------Controller---------------------/////////
-
 /////////-----------------------------Model---------------------/////////
 var attachHandlers = (() => {
   for (let elem of places) {
