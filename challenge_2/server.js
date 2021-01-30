@@ -18,12 +18,16 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.post('/', (req, res, next) => {
-  var body = req.body;
-  var newBuffer = Buffer.from(body, 'utf-8');
-  var bufferString = newBuffer.toString();
-  var stringBuffer = JSON.stringify(bufferString);
-  var parsedBinaryWithHeader = JSON.parse(stringBuffer);
-  parsedWithoutHeader = parsedBinaryWithHeader.replace('data:application/json;base64,', '');
+  var body = JSON.stringify(req.body);
+  console.log('body');
+  console.log(body);
+  // var newBuffer = Buffer.from(body, 'utf-8');
+  // var bufferString = newBuffer.toString();
+  // var stringBuffer = JSON.stringify(bufferString);
+  // var parsedBinaryWithHeader = JSON.parse(stringBuffer);
+  parsedWithoutHeader = body.replace('data:application/json;base64,', '');
+  console.log('parsedWithoutHeader');
+  console.log(parsedWithoutHeader);
   parsedAscii = atob(parsedWithoutHeader);
   var data = CSV(parsedAscii);
   res.writeHead(200, { 'Content-Type': 'text/csv' });

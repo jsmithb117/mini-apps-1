@@ -7,35 +7,21 @@ filePicker.addEventListener('change', (event) => {
     reader.addEventListener('load', (event) => {
       var rawData = event.target.result;
       var jsonData = JSON.stringify(rawData);
-
-      fetch('http://localhost:3000/', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "text/csv"
-        },
-        body: jsonData
+      $.ajax({
+        method: "POST",
+        url: "http://localhost:3000/",
+        data: jsonData
       })
-        .then((res) => {
-          if (res.ok) {
-            return res.blob();
-          } else {
-            throw new Error(`Server returned status: ${res.status} with error: ${res.statusText}`);
-          }
-        })
-        .then(resBlob => resBlob.text())
-        .then((blobText) => {
+        .done((res) => {
+          console.log('res')
+          console.log(res);
           var csvNode = document.createElement('span');
           var spacer = document.createElement('hr');
           csvNode.setAttribute('className', 'csv-data');
-          csvNode.append(blobText);
+          csvNode.append(res);
           document.getElementById('csv').appendChild(spacer);
           document.getElementById('csv').appendChild(csvNode);
         })
-        .catch((err) => {
-          if (err) {
-            console.error(err);
-        }})
     });
     reader.readAsDataURL(file);
   }
