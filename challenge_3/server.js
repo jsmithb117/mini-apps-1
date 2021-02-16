@@ -5,16 +5,12 @@ const bodyParser = require('body-parser');
 
 const port = 3000;
 
-app.use((req, res, next) => {
-  console.log('did stuff');
-  next();
-});
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/', (req, res, next) => {
+app.get('/stuff', (req, res, next) => {
   console.log('req.body: ', req.body);
-  res.send('sent');
+  res.send('sent stuff');
 })
 
 
