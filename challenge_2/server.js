@@ -5,7 +5,7 @@ const path = require('path');
 const atob = require('atob');
 
 const app = express();
-const port = 3000;
+const port = 4000;
 
 app.listen(port, () => {
   console.log(`Server is listening on port: ${port}`);
@@ -18,6 +18,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.post('/', (req, res, next) => {
+  console.log('post /')
   var body = JSON.stringify(req.body);
   parsedWithoutHeader = body.replace('data:application/json;base64,', '');
   parsedAscii = atob(parsedWithoutHeader);
@@ -28,10 +29,12 @@ app.post('/', (req, res, next) => {
 });
 
 app.get('/', (req, res, next) => {
+  console.log('get /')
   res.sendFile(path.join(__dirname, 'challenge_2', '../client', 'index.html'));
 });
 
 app.get('/:file', (req, res, next) => {
+  console.log('get file')
   var options = {
     root: path.join(__dirname, 'challenge_2', '../client')
   };
