@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js --watch",
-    "build": "./node_modules/.bin/babel client --out-dir public --presets @babel/preset-react --source-maps inline --watch"
+    "build": "./node_modules/.bin/babel client --watch --out-dir public --presets @babel/preset-react --source-maps inline"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,7 @@
     "@babel/core": "^7.12.16",
     "@babel/preset-env": "^7.12.16",
     "express": "^4.17.1",
+    "mongoose": "^5.11.16",
     "nodemon": "^2.0.7",
     "path": "^0.12.7"
   },
