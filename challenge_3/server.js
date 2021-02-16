@@ -9,10 +9,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/f1', (req, res, next) => {
-  console.log('req.body: ', req.body);
-  res.send('sent stuff');
+  console.log('f1req.body: ', req.body);
+  res.end();
 })
 
+app.post('/f2', (req, res, next) => {
+  console.log('f2req.body: ', req.body);
+  res.end();
+})
+
+app.post('/f3', (req, res, next) => {
+  console.log('f3req.body: ', req.body);
+  res.end();
+})
 
 app.use(express.static(path.join(__dirname, 'public')))
 

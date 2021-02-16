@@ -3,9 +3,9 @@ mongoose.connect('mongodb://localhost/multi');
 
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection Error...'));
-db.once('open', () => {
-  console.log('Connected to mongoose')
-});
+// db.once('open', () => {
+//   console.log('Connected to mongoose')
+// });
 
 let multiSchema = mongoose.Schema({
   name: String,

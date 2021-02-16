@@ -5,44 +5,95 @@ class App extends React.Component {
       checkout: true,
       form1: false,
       form2: false,
-      form3: false
+      form3: false,
+      url: "http://localhost:3000",
+      form1Data: {},
+      form2Data: {},
+      form3Data: {}
     }
   };
 
   setCheckout() {
-    // debugger;
     this.setState({ checkout: !this.state.checkout });
   };
   setForm1() {
-    // debugger;
     this.setState({ form1: !this.state.form1 });
   };
   setForm2() {
-    // debugger;
     this.setState({ form2: !this.state.form2 });
   };
   setForm3() {
-    // debugger;
     this.setState({ form3: ~this.state.form3 });
   };
 
   submitForm1(event) {
-    // debugger;
-    console.log('form1 submit event: ', event);
-    //event = {
-      // name: 'input',
-      // email: 'input',
-      // password: 'input'
-    // }
+    console.log('eventF1: ', event);
+    let options = {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(event)
+    };
+    fetch(`${this.state.url}/f1`, options)
+      .then((data) => {
+        if (!data.ok) {
+          throw new Error(response.status);
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          console.error(err);
+        }
+      })
   };
   submitForm2(event) {
-    // debugger;
+    console.log('eventF2: ', event);
+    let options = {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(event)
+    };
+    fetch(`${this.state.url}/f2`, options)
+      .then((data) => {
+        if (!data.ok) {
+          throw new Error(response.status);
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          console.error(err);
+        }
+      })
     console.log('form2 submit event: ', event);
   };
+
   submitForm3(event) {
-    // debugger;
+    console.log('eventF3: ', event);
+    let options = {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(event)
+    };
+    fetch(`${this.state.url}/f3`, options)
+      .then((data) => {
+        if (!data.ok) {
+          throw new Error(response.status);
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          console.error(err);
+        }
+      })
     console.log('form3 submit event: ', event);
   };
+
+
 
   render() {
     if (this.state.checkout) {
@@ -98,20 +149,22 @@ class Form1 extends React.Component {
   }
 
   handleNameChange(event) {
-    this.setState({name: event.target.value});
+    this.setState({ name: event.target.value });
   }
 
   handleEmailChange(event) {
-    this.setState({email: event.target.value});
+    this.setState({ email: event.target.value });
   };
 
   handlePasswordChange(event) {
-    this.setState({password: event.target.value});
+    this.setState({ password: event.target.value });
   }
 
   handleSubmit() {
-    // debugger;
     this.props.submitForm1(this.state);
+    this.props.setForm1();
+    this.props.setForm2();
+
   }
 
   render() {
@@ -146,23 +199,25 @@ class Form2 extends React.Component {
   }
 
   handleLine1Change(event) {
-    this.setState({shipToLine1: event.target.value});
+    this.setState({ shipToLine1: event.target.value });
   }
 
   handleShipToLine2Change(event) {
-    this.setState({shipToLine2: event.target.value});
+    this.setState({ shipToLine2: event.target.value });
   };
 
   handleShipToStateChange(event) {
-    this.setState({shipToState: event.target.value});
+    this.setState({ shipToState: event.target.value });
   }
 
   handleShipToZipChange(event) {
-    this.setState({shipToZip: event.target.value});
+    this.setState({ shipToZip: event.target.value });
   }
 
   handleSubmit() {
-    props.submitForm1(this.state);
+    this.props.submitForm2(this.state);
+    this.props.setForm2();
+    this.props.setForm3();
   }
 
   render() {
@@ -188,7 +243,55 @@ class Form2 extends React.Component {
     )
   }
 }
+class Form3 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      credit: '',
+      cvv: '',
+      billingZip: 0
+    }
+  }
 
+  handleCreditChange(event) {
+    this.setState({ credit: event.target.value });
+  }
+
+  handleCvvChange(event) {
+    this.setState({ cvv: event.target.value });
+  };
+
+  handleBillingZipChange(event) {
+    this.setState({ billingZip: event.target.value });
+  }
+
+
+  handleSubmit() {
+    this.props.submitForm3(this.state);
+    this.props.setForm3();
+    this.props.setCheckout();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit.bind(this)}>
+        Shipping Address:
+        <label>Credit Card:
+              <input type="text" value={this.state.credit} onChange={this.handleCreditChange.bind(this)} />
+        </label>
+        <label>CVV:
+              <input type="text" value={this.state.cvv} onChange={this.handleCvvChange.bind(this)} />
+        </label>
+        <label>Billing Zip Code:
+              <input type="text" value={this.state.billingZip} onChange={this.handleBillingZipChange.bind(this)} />
+        </label>
+        <button>
+          Submit
+          </button>
+      </form>
+    )
+  }
+};
 ReactDOM.render(<App />, document.getElementById('app'));
 
 ////Components:
