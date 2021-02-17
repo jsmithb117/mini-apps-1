@@ -1,11 +1,8 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/multi');
+mongoose.connect('mongodb://localhost/multi', { useFindAndModify: false });
 
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection Error...'));
-// db.once('open', () => {
-//   console.log('Connected to mongoose')
-// });
 
 let multiSchema = mongoose.Schema({
   name: String,
@@ -18,7 +15,8 @@ let multiSchema = mongoose.Schema({
   shipToZip: Number,
   credit: Number,
   cvv: Number,
-  billingZip: Number
+  billingZip: Number,
+  purchaseComplete: Boolean
 });
 
 module.exports.Multi = mongoose.model('Multi', multiSchema);

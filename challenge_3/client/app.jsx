@@ -32,24 +32,22 @@ class App extends React.Component {
 
   submitForm1(event) {
     this.setState({ form1Data: event }, () => {
-      console.log('form1Data from App: ', this.state.form1Data);
       let options = {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(event)
+        body: JSON.stringify({event})
       };
       fetch(`${this.state.url}/f1`, options)
         .then((data) => {
           if (!data.ok) {
             throw new Error(data.status);
           }
-          console.log('F1 data: ', data);
         })
         .catch((err) => {
           if (err) {
-            console.error(err);
+            console.error('Error in submitForm1: ', err);
           }
         })
     });
@@ -61,19 +59,17 @@ class App extends React.Component {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(event)
+        body: JSON.stringify({ form1Data: this.state.form1Data, form2Data: event })
       };
       fetch(`${this.state.url}/f2`, options)
         .then((data) => {
           if (!data.ok) {
             throw new Error(data.status);
           }
-          console.log('F2 data: ', data);
-
         })
         .catch((err) => {
           if (err) {
-            console.error(err);
+            console.error('Error in submitForm2: ', err);
           }
         })
     })
@@ -86,44 +82,41 @@ class App extends React.Component {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(event)
+        body: JSON.stringify({ form1Data: this.state.form1Data, form3Data: event })
       };
       fetch(`${this.state.url}/f3`, options)
         .then((data) => {
           if (!data.ok) {
             throw new Error(data.status);
           }
-          console.log('F3 data: ', data);
-
         })
         .catch((err) => {
           if (err) {
-            console.error(err);
+            console.error('Error in submitForm3: ', err);
           }
         })
     })
   };
 
   purchaseHandler() {
-    let formData = {};
-    formData = Object.assign(formData, this.state.form1Data, this.state.form2Data, this.state.form3Data);
     let options = {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(this.state.form1Data)
     };
     fetch(`${this.state.url}/purchase`, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error(response.status);
         }
-        console.log('purchase response: ', response);
+        this.setCheckout();
+        this.setPurchase();
       })
       .catch((err) => {
         if (err) {
-          console.error('Error in purchaseHanlder: ', err);
+          console.error('Error in purchaseHandler: ', err);
         }
       })
   }
@@ -168,12 +161,12 @@ let Checkout = (props) => {
     props.setCheckout();
     props.setForm1();
   }
+
   return (
     <button onClick={checkoutHandler}>
       Checkout
     </button>
   );
-
 };
 
 class Form1 extends React.Component {
@@ -202,12 +195,13 @@ class Form1 extends React.Component {
     this.props.submitForm1(this.state);
     this.props.setForm1();
     this.props.setForm2();
-
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit.bind(this)}>
+        Enter full name, email address, and password: (Step 1 of 4)
+        <br />
         <label>Name:
           <input type="text" value={this.state.name} onChange={this.handleNameChange.bind(this)} />
         </label>
@@ -221,7 +215,7 @@ class Form1 extends React.Component {
         </label>
         <br />
         <button>
-          Submit
+          Next
         </button>
       </form>
     )
@@ -269,7 +263,8 @@ class Form2 extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit.bind(this)}>
-        Shipping Address:
+        Enter Shipping address, City, State, and Zip code: (Step 2 of 4)
+        <br />
         <label>Line1:
           <input type="text" value={this.state.shipToLine1} onChange={this.handleLine1Change.bind(this)} />
         </label>
@@ -291,7 +286,7 @@ class Form2 extends React.Component {
         </label>
         <br />
         <button>
-          Submit
+          Next
         </button>
       </form>
     )
@@ -329,7 +324,8 @@ class Form3 extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit.bind(this)}>
-        Credit Card Information:
+        Enter Credit Card Number, CVV, and Billing Zip Code: (Step 3 of 4)
+        <br />
         <br />
         <label>Credit Card:
               <input type="text" value={this.state.credit} onChange={this.handleCreditChange.bind(this)} />
@@ -345,7 +341,7 @@ class Form3 extends React.Component {
         <br />
         <button>
           Submit
-          </button>
+        </button>
       </form>
     )
   }
@@ -353,7 +349,9 @@ class Form3 extends React.Component {
 
 var Purchase = (props) => {
   return (
-    <div>Summary:
+    <div>
+        Review purchase information.  If correct, press the Purchase button: (Step 4 of 4)
+        <br />
       <div>
         Name: {props.form1Data.name}
       </div>
@@ -397,39 +395,3 @@ var Purchase = (props) => {
 };
 
 ReactDOM.render(<App />, document.getElementById('app'));
-
-////Components:
-  //App
-    //has booleans for conditional rendering of:
-      //button
-      //F1
-      //F2
-      //F3
-    //has set handlers for each that flips boolean state when called.
-    //has onsubmit for F1, F2, and F3
-      //does a POST for each
-    //Checkout - Renders a button that sets 'form1' to true
-      //Form1 - if form1 is true, renders F1
-        //state Form1 holds:
-          //name
-          //email
-          //password
-        //has onChange for each state
-        //has onSubmit (as prop from App), submits all three states simultaneously
-          //after submit, clears state
-      //Form2
-        //state From2 holds:
-          // shipToLine1
-          // shipToLine2
-          // shipToCity
-          // shipToState
-          // shipToZip
-        //has onChange for each state
-        //has onSubmit (as prop from App), submits all 5 states simultaneously
-      //Form3
-        //state Form3 holds:
-          // credit
-          // CVV
-          // billingZip
-        //has onChange for each state
-        //has onSubmit (as prop from App), submits all 3 states simultaneously

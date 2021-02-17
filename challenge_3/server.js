@@ -9,29 +9,47 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/f1', (req, res, next) => {
-  console.log('f1req.body: ', req.body);
+  let f1Data = req.body.event;
+  f1Data = Object.assign(f1Data, { purchaseComplete: false });
+  db.Multi.create(f1Data, (err, response) => {
+    if (err) {
+      console.error('Error in POST/F1: ', err);
+    }
+  })
   res.end();
 })
 
 app.post('/f2', (req, res, next) => {
-  console.log('f2req.body: ', req.body);
+  let filter = req.body.form1Data;
+  let update = req.body.form2Data;
+  db.Multi.findOneAndUpdate(filter, update, (err, response) => {
+    if (err) {
+      console.error('Error in POST/F2: ', err);
+    }
+  })
   res.end();
 })
 
 app.post('/f3', (req, res, next) => {
-  console.log('f3req.body: ', req.body);
+  let filter = req.body.form1Data;
+  let update = req.body.form3Data;
+  db.Multi.findOneAndUpdate(filter, update, (err, response) => {
+    if (err) {
+      console.error('Error in POST/F3: ', err);
+    }
+  })
   res.end();
 })
 
 app.post('/purchase', (req, res, next) => {
-  console.log('purchase req.body: ', req.body);
-  db.Multi.create(req.body, (err, response) => {
+  let filter = req.body.form1Data;
+  let update = { purchaseComplete: true };
+  db.Multi.findOneAndUpdate(filter, update, (err, response) => {
     if (err) {
-      console.error(err);
+      console.error('Error in POST/F3: ', err);
     }
-    console.log('db response: ', response);
-    res.send(response);
   })
+  res.end();
 })
 
 app.use(express.static(path.join(__dirname, 'public')))
