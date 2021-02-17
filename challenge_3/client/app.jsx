@@ -6,6 +6,7 @@ class App extends React.Component {
       form1: false,
       form2: false,
       form3: false,
+      purchase: false,
       url: "http://localhost:3000",
       form1Data: {},
       form2Data: {},
@@ -23,76 +24,93 @@ class App extends React.Component {
     this.setState({ form2: !this.state.form2 });
   };
   setForm3() {
-    this.setState({ form3: ~this.state.form3 });
+    this.setState({ form3: !this.state.form3 });
+  };
+  setPurchase() {
+    this.setState({ purchase: !this.state.purchase })
   };
 
   submitForm1(event) {
-    let options = {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(event)
-    };
-    fetch(`${this.state.url}/f1`, options)
-      .then((data) => {
-        if (!data.ok) {
-          throw new Error(response.status);
-        }
-        console.log('F1 data: ', data);
-      })
-      .catch((err) => {
-        if (err) {
-          console.error(err);
-        }
-      })
+    this.setState({ form1Data: event }, () => {
+      console.log('form1Data from App: ', this.state.form1Data);
+      let options = {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(event)
+      };
+      fetch(`${this.state.url}/f1`, options)
+        .then((data) => {
+          if (!data.ok) {
+            throw new Error(response.status);
+          }
+          console.log('F1 data: ', data);
+        })
+        .catch((err) => {
+          if (err) {
+            console.error(err);
+          }
+        })
+    });
   };
   submitForm2(event) {
-    let options = {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(event)
-    };
-    fetch(`${this.state.url}/f2`, options)
-      .then((data) => {
-        if (!data.ok) {
-          throw new Error(response.status);
-        }
-        console.log('F2 data: ', data);
+    this.setState({ form2Data: event }, () => {
+      let options = {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(event)
+      };
+      fetch(`${this.state.url}/f2`, options)
+        .then((data) => {
+          if (!data.ok) {
+            throw new Error(response.status);
+          }
+          console.log('F2 data: ', data);
 
-      })
-      .catch((err) => {
-        if (err) {
-          console.error(err);
-        }
-      })
+        })
+        .catch((err) => {
+          if (err) {
+            console.error(err);
+          }
+        })
+    })
   };
 
   submitForm3(event) {
-    let options = {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(event)
-    };
-    fetch(`${this.state.url}/f3`, options)
-      .then((data) => {
-        if (!data.ok) {
-          throw new Error(response.status);
-        }
-        console.log('F3 data: ', data);
+    this.setState({ form3Data: event }, () => {
+      let options = {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(event)
+      };
+      fetch(`${this.state.url}/f3`, options)
+        .then((data) => {
+          if (!data.ok) {
+            throw new Error(response.status);
+          }
+          console.log('F3 data: ', data);
 
-      })
-      .catch((err) => {
-        if (err) {
-          console.error(err);
-        }
-      })
+        })
+        .catch((err) => {
+          if (err) {
+            console.error(err);
+          }
+        })
+    })
   };
 
+  purchaseHandler() {
+    debugger;
+    let formData = {};
+    formData = Object.assign(formData, this.state.form1Data, this.state.form2Data, this.state.form3Data);
+    console.log('formData: ', formData);
+    // let dbRef = new db.Multi()
+  }
 
 
   render() {
@@ -118,8 +136,12 @@ class App extends React.Component {
     } else if (this.state.form3) {
       return (
         <div className="main">
-          <Form3 setForm3={this.setForm3.bind(this)} setCheckout={this.setCheckout.bind(this)} submitForm3={this.submitForm3.bind(this)} />
+          <Form3 setForm3={this.setForm3.bind(this)} setPurchase={this.setPurchase.bind(this)} submitForm3={this.submitForm3.bind(this)} />
         </div>
+      )
+    } else if (this.state.purchase) {
+      return (
+        <Purchase form1Data={this.state.form1Data} form2Data={this.state.form2Data} form3Data={this.state.form3Data} setPurchase={this.setPurchase.bind(this)} setForm3={this.setForm3.bind(this)} purchaseHandler={this.purchaseHandler.bind(this)} />
       )
     }
   };
@@ -196,6 +218,7 @@ class Form2 extends React.Component {
     this.state = {
       shipToLine1: '',
       shipToLine2: '',
+      shipToCity: '',
       shipToState: '',
       shipToZip: 0
     }
@@ -209,19 +232,23 @@ class Form2 extends React.Component {
     this.setState({ shipToLine2: event.target.value });
   };
 
+  handleShipToCityChange(event) {
+    this.setState({ shipToCity: event.target.value });
+  };
+
   handleShipToStateChange(event) {
     this.setState({ shipToState: event.target.value });
-  }
+  };
 
   handleShipToZipChange(event) {
     this.setState({ shipToZip: event.target.value });
-  }
+  };
 
   handleSubmit() {
     this.props.submitForm2(this.state);
     this.props.setForm2();
     this.props.setForm3();
-  }
+  };
 
   render() {
     return (
@@ -233,6 +260,10 @@ class Form2 extends React.Component {
         <br />
         <label>Line2:
           <input type="text" value={this.state.shipToLine2} onChange={this.handleShipToLine2Change.bind(this)} />
+        </label>
+        <br />
+        <label>City:
+          <input type="text" value={this.state.shipToCity} onChange={this.handleShipToCityChange.bind(this)} />
         </label>
         <br />
         <label>State:
@@ -276,13 +307,14 @@ class Form3 extends React.Component {
   handleSubmit() {
     this.props.submitForm3(this.state);
     this.props.setForm3();
-    this.props.setCheckout();
+    this.props.setPurchase();
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit.bind(this)}>
-        Shipping Address:
+        Credit Card Information:
+        <br />
         <label>Credit Card:
               <input type="text" value={this.state.credit} onChange={this.handleCreditChange.bind(this)} />
         </label>
@@ -302,6 +334,52 @@ class Form3 extends React.Component {
     )
   }
 };
+
+var Purchase = (props) => {
+  return (
+    <div>Summary:
+      <div>
+        Name: {props.form1Data.name}
+      </div>
+      <div>
+        Email: {props.form1Data.email}
+      </div>
+      <div>
+        Password: {props.form1Data.password}
+      </div>
+      <div>
+        Ship to:
+        <div>
+          &nbsp;&nbsp;&nbsp;&nbsp;Address Line 1: {props.form2Data.shipToLine1}
+        </div>
+        <div>
+          &nbsp;&nbsp;&nbsp;&nbsp;Address Line 2: {props.form2Data.shipToLine2}
+        </div>
+        <div>
+          &nbsp;&nbsp;&nbsp;&nbsp;City: {props.form2Data.shipToCity}
+        </div>
+        <div>
+          &nbsp;&nbsp;&nbsp;&nbsp;State: {props.form2Data.shipToState}
+        </div>
+        <div>
+          &nbsp;&nbsp;&nbsp;&nbsp;Zip: {props.form2Data.shipToZip}
+        </div>
+      </div>
+      <div>
+        Credit card number: {props.form3Data.credit}
+      </div>
+      <div>
+        CVV: {props.form3Data.cvv}
+      </div>
+      <div>
+        Billing zip code: {props.form3Data.billingZip}
+      </div>
+      <br />
+      <button onClick={props.purchaseHandler}> Purchase </button>
+    </div>
+  )
+};
+
 ReactDOM.render(<App />, document.getElementById('app'));
 
 ////Components:

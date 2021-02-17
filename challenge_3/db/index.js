@@ -21,5 +21,5 @@ let multiSchema = mongoose.Schema({
   billingZip: Number
 });
 
-module.exports = Multi = mongoose.model('Multi', multiSchema);
+module.exports.Multi = mongoose.model('Multi', multiSchema);
 
