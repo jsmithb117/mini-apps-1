@@ -27,7 +27,6 @@ class App extends React.Component {
   };
 
   submitForm1(event) {
-    console.log('eventF1: ', event);
     let options = {
       method: "POST",
       headers: {
@@ -40,6 +39,7 @@ class App extends React.Component {
         if (!data.ok) {
           throw new Error(response.status);
         }
+        console.log('F1 data: ', data);
       })
       .catch((err) => {
         if (err) {
@@ -48,7 +48,6 @@ class App extends React.Component {
       })
   };
   submitForm2(event) {
-    console.log('eventF2: ', event);
     let options = {
       method: "POST",
       headers: {
@@ -61,17 +60,17 @@ class App extends React.Component {
         if (!data.ok) {
           throw new Error(response.status);
         }
+        console.log('F2 data: ', data);
+
       })
       .catch((err) => {
         if (err) {
           console.error(err);
         }
       })
-    console.log('form2 submit event: ', event);
   };
 
   submitForm3(event) {
-    console.log('eventF3: ', event);
     let options = {
       method: "POST",
       headers: {
@@ -84,13 +83,14 @@ class App extends React.Component {
         if (!data.ok) {
           throw new Error(response.status);
         }
+        console.log('F3 data: ', data);
+
       })
       .catch((err) => {
         if (err) {
           console.error(err);
         }
       })
-    console.log('form3 submit event: ', event);
   };
 
 
@@ -173,12 +173,15 @@ class Form1 extends React.Component {
         <label>Name:
           <input type="text" value={this.state.name} onChange={this.handleNameChange.bind(this)} />
         </label>
+        <br />
         <label>Email:
           <input type="text" value={this.state.email} onChange={this.handleEmailChange.bind(this)} />
         </label>
+        <br />
         <label>Password:
           <input type="text" value={this.state.password} onChange={this.handlePasswordChange.bind(this)} />
         </label>
+        <br />
         <button>
           Submit
         </button>
@@ -227,15 +230,19 @@ class Form2 extends React.Component {
         <label>Line1:
           <input type="text" value={this.state.shipToLine1} onChange={this.handleLine1Change.bind(this)} />
         </label>
+        <br />
         <label>Line2:
           <input type="text" value={this.state.shipToLine2} onChange={this.handleShipToLine2Change.bind(this)} />
         </label>
+        <br />
         <label>State:
           <input type="text" value={this.state.shipToState} onChange={this.handleShipToStateChange.bind(this)} />
         </label>
+        <br />
         <label>Zip:
           <input type="text" value={this.state.shipToZip} onChange={this.handleShipToZipChange.bind(this)} />
         </label>
+        <br />
         <button>
           Submit
         </button>
@@ -279,12 +286,15 @@ class Form3 extends React.Component {
         <label>Credit Card:
               <input type="text" value={this.state.credit} onChange={this.handleCreditChange.bind(this)} />
         </label>
+        <br />
         <label>CVV:
               <input type="text" value={this.state.cvv} onChange={this.handleCvvChange.bind(this)} />
         </label>
+        <br />
         <label>Billing Zip Code:
               <input type="text" value={this.state.billingZip} onChange={this.handleBillingZipChange.bind(this)} />
         </label>
+        <br />
         <button>
           Submit
           </button>
