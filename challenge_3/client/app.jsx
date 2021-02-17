@@ -43,7 +43,7 @@ class App extends React.Component {
       fetch(`${this.state.url}/f1`, options)
         .then((data) => {
           if (!data.ok) {
-            throw new Error(response.status);
+            throw new Error(data.status);
           }
           console.log('F1 data: ', data);
         })
@@ -66,7 +66,7 @@ class App extends React.Component {
       fetch(`${this.state.url}/f2`, options)
         .then((data) => {
           if (!data.ok) {
-            throw new Error(response.status);
+            throw new Error(data.status);
           }
           console.log('F2 data: ', data);
 
@@ -91,7 +91,7 @@ class App extends React.Component {
       fetch(`${this.state.url}/f3`, options)
         .then((data) => {
           if (!data.ok) {
-            throw new Error(response.status);
+            throw new Error(data.status);
           }
           console.log('F3 data: ', data);
 
@@ -105,11 +105,27 @@ class App extends React.Component {
   };
 
   purchaseHandler() {
-    debugger;
     let formData = {};
     formData = Object.assign(formData, this.state.form1Data, this.state.form2Data, this.state.form3Data);
-    console.log('formData: ', formData);
-    // let dbRef = new db.Multi()
+    let options = {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    };
+    fetch(`${this.state.url}/purchase`, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.status);
+        }
+        console.log('purchase response: ', response);
+      })
+      .catch((err) => {
+        if (err) {
+          console.error('Error in purchaseHanlder: ', err);
+        }
+      })
   }
 
 
@@ -285,8 +301,8 @@ class Form3 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      credit: '',
-      cvv: '',
+      credit: 0,
+      cvv: 0,
       billingZip: 0
     }
   }

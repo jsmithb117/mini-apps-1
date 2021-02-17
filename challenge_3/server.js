@@ -23,6 +23,17 @@ app.post('/f3', (req, res, next) => {
   res.end();
 })
 
+app.post('/purchase', (req, res, next) => {
+  console.log('purchase req.body: ', req.body);
+  db.Multi.create(req.body, (err, response) => {
+    if (err) {
+      console.error(err);
+    }
+    console.log('db response: ', response);
+    res.send(response);
+  })
+})
+
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.listen(port, () => {
