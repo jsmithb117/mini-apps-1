@@ -5,7 +5,7 @@ var Row = (props) => {
   return (
     <div className="row">
       {props.row.map((piece, innerIndex) => {
-        return <Piece piece={piece} key={innerIndex} />
+        return <Piece piece={piece} key={innerIndex} dropPiece={props.dropPiece} turn={props.turn} />
       })}
     </div>
   )
