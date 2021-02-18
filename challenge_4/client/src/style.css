@@ -12,9 +12,13 @@ body {
 }
 
 .red {
-  color: red
+  color: red;
 }
 
 .blue {
-  color: blue
+  color: blue;
+}
+
+.white {
+  color: white;
 }

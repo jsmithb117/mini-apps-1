@@ -6,7 +6,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      board: [
+      board: [ //[color, col, row]
         [['white', 0, 0], ['white', 0, 1], ['white', 0, 2], ['white', 0, 3], ['white', 0, 4], ['white', 0, 5]],
         [['white', 1, 0], ['white', 1, 1], ['white', 1, 2], ['white', 1, 3], ['white', 1, 4], ['white', 1, 5]],
         [['white', 2, 0], ['white', 2, 1], ['white', 2, 2], ['white', 2, 3], ['white', 2, 4], ['white', 2, 5]],
@@ -16,9 +16,12 @@ class App extends React.Component {
         [['white', 6, 0], ['white', 6, 1], ['white', 6, 2], ['white', 6, 3], ['white', 6, 4], ['white', 6, 5]]
       ],
       turn: 'red',
-      message: ''
+      message: '',
+      winner: null
     }
   }
+
+
 
   swapPlayer(player) {
     var next = player === 'red' ? 'blue' : 'red';
@@ -29,7 +32,9 @@ class App extends React.Component {
     var board = [...this.state.board];
     var changed = false;
     this.setState({ message: '' });
-    for (let row = 5; row >= 0; row--) {
+
+    debugger;
+    for (let row = 5; row > -1; row--) {
       if (board[col][row][0] === 'white') {
         board[col][row][0] = player;
         this.swapPlayer(player);
@@ -37,15 +42,49 @@ class App extends React.Component {
         break;
       }
     }
-    changed ? this.setState({ board }) : this.setState({ message: 'Invalid move!'});
+    changed ? this.setState({ board }) : this.setState({ message: 'Invalid move!' });
+    this.checkCols();
   };
+
+  // checkRow(row) {
+
+  // }
+
+  checkCols() {
+    let winner = '';
+    let board = [...this.state.board];
+    for (let col = 0; col <= 6; col++) { //iterate board by cols
+      let currentPlayer = '';
+      let count = 0;
+      for (let row = 0; row <= 5; row++) {
+        let piece = board[col][row];
+        if (currentPlayer === '' && piece[0] !== 'white') {
+          currentPlayer = piece[0];
+          count++;
+        } else {
+          if (currentPlayer === piece[0]) {
+            count++;
+          } else if (piece[0] !== 'white') {
+            count = 1;
+            currentPlayer = piece[0];
+          }
+          if (count >= 4) {
+            winner = currentPlayer;
+            this.setState({ winner });
+      }}}
+  }};
+
+  // checkDiagonal() {
+
+  // }
+
 
   render() {
     return (
       <div className="app">
         <div className="title">Connect Four</div>
         <Board board={this.state.board} dropPiece={this.dropPiece.bind(this)} turn={this.state.turn} />
-        <Display turn={this.state.turn} message={this.state.message} />
+        <Display turn={this.state.turn} message={this.state.message} winner={this.state.winner} />
       </div>
     )
   }
