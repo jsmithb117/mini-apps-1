@@ -1,6 +1,7 @@
 const path = require('path');
 
 module.exports = {
+  mode: "development",
   entry: path.resolve(__dirname, './client/src/index.js'),
   output: {
     path: path.resolve(__dirname, './client/dist'),
@@ -12,6 +13,16 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: 'babel-loader'
+      },
+      {
+        test: /\.css$/i,
+        exclude: /node_modules/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader'
+          }
+        ]
       }
     ]
   }
