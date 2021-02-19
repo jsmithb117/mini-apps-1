@@ -1,6 +1,6 @@
 body {
   color: white;
-  background-color: green;
+  background-color: rgb(70, 70, 70);
 }
 
 .title {
@@ -12,13 +12,26 @@ body {
 }
 
 .red {
+  border: 2px solid rgb(214, 107, 107);
   color: red;
 }
 
 .blue {
+  border: 2px solid rgb(125, 169, 184);
   color: blue;
 }
 
 .white {
+  border: 2px solid grey;
   color: white;
+}
+
+.winnerblue {
+  border: 5px solid blue;
+  color:blue;
+}
+
+.winnerred {
+  border: 5px solid red;
+  color: red;
 }

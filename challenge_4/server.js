@@ -7,7 +7,7 @@ app.use((req, res, next) => {
   console.log('serving stuff');
   next();
 })
-
+//time : { type : Date, default: Date.now }
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

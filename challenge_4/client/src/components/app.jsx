@@ -33,7 +33,7 @@ class App extends React.Component {
     var changed = false;
     this.setState({ message: '' });
 
-    debugger;
+    // debugger;
     for (let row = 5; row > -1; row--) {
       if (board[col][row][0] === 'white') {
         board[col][row][0] = player;
@@ -83,7 +83,7 @@ class App extends React.Component {
     return (
       <div className="app">
         <div className="title">Connect Four</div>
-        <Board board={this.state.board} dropPiece={this.dropPiece.bind(this)} turn={this.state.turn} />
+        <Board board={this.state.board} dropPiece={this.dropPiece.bind(this)} turn={this.state.turn} winner={this.state.winner} />
         <Display turn={this.state.turn} message={this.state.message} winner={this.state.winner} />
       </div>
     )
