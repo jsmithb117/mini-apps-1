@@ -1,7 +1,6 @@
 import React from 'react';
 
 var Piece = (props) => {
-
   if (props.winner) {
     return (
       <div className={props.piece[0]}>

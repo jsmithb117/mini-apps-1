@@ -18,10 +18,7 @@ class App extends React.Component {
       turn: 'red',
       message: '',
       winner: null
-    }
-  }
-
-
+  }};
 
   swapPlayer(player) {
     var next = player === 'red' ? 'blue' : 'red';
@@ -32,8 +29,6 @@ class App extends React.Component {
     var board = [...this.state.board];
     var changed = false;
     this.setState({ message: '' });
-
-    // debugger;
     for (let row = 5; row > -1; row--) {
       if (board[col][row][0] === 'white') {
         board[col][row][0] = player;
@@ -44,11 +39,8 @@ class App extends React.Component {
     }
     changed ? this.setState({ board }) : this.setState({ message: 'Invalid move!' });
     this.checkCols();
+    this.checkRows();
   };
-
-  // checkRow(row) {
-
-  // }
 
   checkCols() {
     let winner = '';
@@ -74,10 +66,56 @@ class App extends React.Component {
       }}}
   }};
 
-  // checkDiagonal() {
+  checkRows() {
+    let winner;
+    let board = [...this.state.board];
+    let rows = {};
+    for (let i = 0; i <= 6; i++) { //populate rows to look like {0: {currentPlayer: '', count: 0} ... 6: {currentPlayer: '', count: 0}}
+      rows[i] = {
+        currentPlayer: null,
+        count: 0
+      }
+    }
+    //iterate columns (for, i)
+    for (let i = 0; i < board.length; i++) {
+//       if (this.state.winner) {
+//         break;
+//       }
+      //iterate rows (for, j)
+      for (let j = 0; j < board[i].length; j++) {
+        //let currentPiece = board[i][j]
+        let piece = board[i][j];
+        //piece = ['white', 1, 0]
 
-  // }
+        //if currentPiece[0] is not white
+        if (piece[0] !== 'white') {
+          //if rows[currentPiece[1]] is currentPiece[0]
+          if (rows[piece[2]].currentPlayer === piece[0]) {
+            //increment rows[j].count
+            rows[j].count++;
+            //else
+          } else {
+            //set rows[j].currentPlayer as currentPiece[0]
+            rows[j].currentPlayer = piece[0];
+            //set rows[j].count as 1
+            rows[j].count = 1;
+          }
+          if (rows[j].count >= 4) {
+            winner = rows[j].currentPlayer;
+            this.setState({ winner });
+            break;
+          }
+        }
 
+      }
+    }
+
+
+
+
+
+
+  };
 
   render() {
     return (
