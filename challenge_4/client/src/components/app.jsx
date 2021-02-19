@@ -18,7 +18,8 @@ class App extends React.Component {
       turn: 'red',
       message: '',
       winner: null
-  }};
+    }
+  };
 
   swapPlayer(player) {
     var next = player === 'red' ? 'blue' : 'red';
@@ -29,7 +30,7 @@ class App extends React.Component {
     var board = [...this.state.board];
     var changed = false;
     this.setState({ message: '' });
-    for (let row = 5; row > -1; row--) {
+    for (let row = 5; row >= 0; row--) {
       if (board[col][row][0] === 'white') {
         board[col][row][0] = player;
         this.swapPlayer(player);
@@ -40,6 +41,7 @@ class App extends React.Component {
     changed ? this.setState({ board }) : this.setState({ message: 'Invalid move!' });
     this.checkCols();
     this.checkRows();
+    this.checkDiags();
   };
 
   checkCols() {
@@ -63,8 +65,92 @@ class App extends React.Component {
           if (count >= 4) {
             winner = currentPlayer;
             this.setState({ winner });
-      }}}
-  }};
+          }
+        }
+      }
+    }
+  };
+
+  checkDiags() {
+    let board = this.state.board;
+    let majorDiags = {};
+    let minorDiags = {};
+    let majorBegins = [[0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0]];
+    //for [0,2] (major)
+    //[0,2], [1,3], [2,4], 3,5]
+    //for [3,5] (minor)
+    //[3,5], [4,4], [5,3], [6,2]
+    let minorBegins = [[3, 5], [2, 5], [1, 5], [0, 5], [0, 4], [0, 3]];
+
+    for (let i = 0; i <= 5; i++) {
+      //(major, minor)Diags looks like: { 1: {begin: [0,2], currentPlayer: null, count: 0}, ... 5: {begin: [3,0], currentPlayer: null, count: 0}}
+      majorDiags[i] = {
+        begin: majorBegins.shift(),
+        currentPlayer: null,
+        count: 0
+      }
+      minorDiags[i] = {
+        begin: minorBegins.shift(),
+        currentPlayer: null,
+        count: 0
+      }
+    };
+
+    for (let elem in minorDiags) {
+      var minorX = minorDiags[elem].begin[0];
+      var minorY = minorDiags[elem].begin[1];
+
+      while (minorX <= 6 && minorY >= 0) {
+        var minorPiece = board[minorX][minorY];
+
+        if (minorPiece[0] !== 'white') {
+          if (minorDiags[elem].currentPlayer === minorPiece[0]) {
+            minorDiags[elem].count++;
+          } else {
+            minorDiags[elem].currentPlayer = minorPiece[0];
+            minorDiags[elem].count++;
+          }
+        }
+
+        if (minorDiags[elem].count >= 4) {
+          var winner = minorDiags[elem].currentPlayer;
+          this.setState({ winner });
+          break;
+        }
+
+        minorX++;
+        minorY--;
+      }
+    }
+
+    for (let elem in majorDiags) {
+      var majorX = majorDiags[elem].begin[0];
+      var majorY = majorDiags[elem].begin[1];
+
+      while (majorX <= 6 && majorY <= 5) {
+        var majorPiece = board[majorX][majorY];
+
+        if (majorPiece[0] !== 'white') {
+          if (majorDiags[elem].currentPlayer === majorPiece[0]) {
+            majorDiags[elem].count++;
+          } else {
+            majorDiags[elem].currentPlayer = majorPiece[0];
+            majorDiags[elem].count++;
+          }
+        }
+
+        if (majorDiags[elem].count >= 4) {
+          var winner = majorDiags[elem].currentPlayer;
+          this.setState({ winner });
+          break;
+        }
+
+        majorX++;
+        majorY++;
+      }
+    }
+  };
+
 
   checkRows() {
     let winner;
@@ -76,45 +162,28 @@ class App extends React.Component {
         count: 0
       }
     }
-    //iterate columns (for, i)
     for (let i = 0; i < board.length; i++) {
-//       if (this.state.winner) {
-//         break;
-//       }
-      //iterate rows (for, j)
+      if (this.state.winner) {
+        break;
+      }
       for (let j = 0; j < board[i].length; j++) {
-        //let currentPiece = board[i][j]
         let piece = board[i][j];
-        //piece = ['white', 1, 0]
-
-        //if currentPiece[0] is not white
         if (piece[0] !== 'white') {
-          //if rows[currentPiece[1]] is currentPiece[0]
           if (rows[piece[2]].currentPlayer === piece[0]) {
-            //increment rows[j].count
             rows[j].count++;
-            //else
           } else {
-            //set rows[j].currentPlayer as currentPiece[0]
             rows[j].currentPlayer = piece[0];
-            //set rows[j].count as 1
             rows[j].count = 1;
           }
           if (rows[j].count >= 4) {
             winner = rows[j].currentPlayer;
             this.setState({ winner });
+            console.log('board: ', board);
             break;
           }
         }
-
       }
     }
-
-
-
-
-
-
   };
 
   render() {
