@@ -1,7 +1,7 @@
 import React from 'react';
 import Board from './Board.jsx';
 import Display from './Display.jsx';
-import { checkCols, checkDiags, checkRows } from './checks.js';
+import { checkCols, checkDiags, checkRows, checkTie } from './checks.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -45,16 +45,20 @@ class App extends React.Component {
     var colsWinner = checkCols(this.state.board);
     var rowsWinner = checkRows(this.state.board);
     var diagsWinner = checkDiags(this.state.board);
+
     var winner = colsWinner ? colsWinner
     : rowsWinner ? rowsWinner
     : diagsWinner ? diagsWinner
     : null;
     if (winner) {
       this.setState({ winner });
+    } else {
+      var isTie = checkTie(this.state.board);
+      if (isTie) {
+        this.setState({ message: "It's a tie!" });
+      }
     }
   };
-
-
 
   render() {
     return (

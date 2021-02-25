@@ -122,4 +122,15 @@ const checkRows = (board) => {
   return winner;
 };
 
-export { checkCols, checkDiags, checkRows };
+  const checkTie = (board) => {
+    for (let col = 0; col < board.length; col++) {
+      for (let row = 0; row < board[col].length; row++) {
+        if (board[col][row][0] === 'white') {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+export { checkCols, checkDiags, checkRows, checkTie };

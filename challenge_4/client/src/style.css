@@ -8,7 +8,7 @@ body {
 }
 .board {
   display: grid;
-  grid-template-columns: 14% 14% 14% 14% 14% 14% 14%;
+  grid-template-columns: 50px 50px 50px 50px 50px 50px 50px;
 }
 
 .red {
